@@ -41,9 +41,11 @@ const weatherSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchWeather.fulfilled, (state, action) => {
+        if (action.payload.location.region.toLowerCase().includes('western cape')) {
+          state.locations = [...state.locations, action.payload];
+        }
         state.loading = false;
         state.current = action.payload;
-        state.locations = [...state.locations, action.payload];
       })
       .addCase(fetchWeather.rejected, (state, action) => {
         state.loading = false;
@@ -52,6 +54,7 @@ const weatherSlice = createSlice({
       .addCase(fetchBulkWeather.fulfilled, (state, action) => {
         state.locations = action.payload;
       });
+      
   }
 });
 

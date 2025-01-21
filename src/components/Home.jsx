@@ -83,12 +83,12 @@ export default function Home() {
                 backdropFilter: 'blur(16px)',
                 borderRadius: '16px'
               }}>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-                  🌍 Explore South Africa
-                </Typography>
-                <Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
-                  Start by searching for any suburb or try these popular cities:
-                </Typography>
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                🌆 Explore Cape Town
+              </Typography>
+              <Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
+                Search for Cape Town suburbs or try these popular areas:
+              </Typography>
                 
                 <Stack spacing={2}>
                   {defaultCities.map((city) => (

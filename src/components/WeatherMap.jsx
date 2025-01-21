@@ -3,7 +3,19 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix default markers - Add null checks for SSR safety
+
+import { useMap } from 'react-leaflet';
+
+function MapBounds() {
+  const map = useMap();
+  const bounds = L.latLngBounds(
+    L.latLng(-34.5, 18.2),  // SW point
+    L.latLng(-33.8, 18.8)   // NE point
+  );
+  map.setMaxBounds(bounds);
+  return null;
+}
+
 if (typeof window !== 'undefined') {
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -26,12 +38,11 @@ export default function WeatherMap({ locations }) {
         // Add key to force re-render when locations change
         key={locations.length}
       >
+        <MapBounds />
         <TileLayer
-          url={`https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=${
-            import.meta.env.VITE_MAPBOX_TOKEN
-          }`}
-          attribution='© <a href="https://www.mapbox.com/">Mapbox</a>'
-        />
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
         
         {locations.map((loc, index) => {
           // Add validation for coordinates
