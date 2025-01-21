@@ -6,11 +6,11 @@ import { fetchWeather } from '../features/weatherSlice';
 import { motion } from 'framer-motion';
 
 const placeholderVariants = [
-  "Cape Town",
-  "Johannesburg",
-  "Durban",
-  "Pretoria",
-  "Port Elizabeth"
+  "Rondebosch",
+  "Newlands",
+  "Kommetjie",
+  "Oranjezicht",
+  "Sea Point"
 ];
 
 export default function SearchBar() {
@@ -31,7 +31,8 @@ export default function SearchBar() {
 
   const handleSearch = () => {
     if (query.trim()) {
-      dispatch(fetchWeather(query));
+      const formattedQuery = `${query.trim()}, Cape Town`;
+      dispatch(fetchWeather(formattedQuery));
       setQuery('');
     }
   };

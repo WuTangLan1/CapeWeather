@@ -20,8 +20,8 @@ export default function WeatherMap({ locations }) {
   return (
     <div style={{ height: '500px', borderRadius: '16px', overflow: 'hidden' }}>
       <MapContainer 
-        center={[-28.4796, 24.6981]} 
-        zoom={5} 
+        center={[-33.9249, 18.4241]}
+        zoom={11}  // Closer zoom level
         style={{ height: '100%', width: '100%' }}
         // Add key to force re-render when locations change
         key={locations.length}
