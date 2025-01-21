@@ -16,6 +16,7 @@
     "@mui/material": "^5.15.15",
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
+    "capeweather": "file:",
     "framer-motion": "^10.16.0",
     "leaflet": "^1.9.4",
     "react": "^18.3.1",
