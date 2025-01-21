@@ -43,7 +43,7 @@ const weatherSlice = createSlice({
       .addCase(fetchWeather.fulfilled, (state, action) => {
         state.loading = false;
         state.current = action.payload;
-        state.locections = [...state.locations, action.payload];
+        state.locations = [...state.locations, action.payload];
       })
       .addCase(fetchWeather.rejected, (state, action) => {
         state.loading = false;

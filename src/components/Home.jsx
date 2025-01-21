@@ -1,6 +1,6 @@
 // src/pages/Home.jsx
 import { useSelector } from 'react-redux';
-import { Grid, Container, Box, Skeleton } from '@mui/material';
+import { Grid, Container, Box, Skeleton, Typography, Stack } from '@mui/material';
 import SearchBar from '../components/SearchBar';
 import WeatherCard from '../components/WeatherCard';
 import WeatherMap from '../components/WeatherMap';
