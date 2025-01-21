@@ -12,9 +12,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@mapbox/mapbox-gl-geocoder": "^5.0.3",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@reduxjs/toolkit": "^2.5.0",
+    "@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
     "axios": "^1.7.9",
     "capeweather": "file:",
     "framer-motion": "^10.16.0",

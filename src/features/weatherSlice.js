@@ -1,6 +1,6 @@
 // src/features/weather/weatherSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchCurrentWeather, fetchMultipleLocations } from '../../services/weatherAPI';
+import { fetchCurrentWeather, fetchMultipleLocations } from '../services/weatherAPI';
 
 export const fetchWeather = createAsyncThunk(
   'weather/fetch',

@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { theme } from './styles/theme';
 import store from './app/store';
-import Home from './pages/Home';
+import Home from './components/Home';
 
 function App() {
   return (

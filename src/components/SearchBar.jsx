@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { fetchWeather } from '../features/weather/weatherSlice';
+import { fetchWeather } from '../features/weatherSlice';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
