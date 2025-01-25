@@ -1,9 +1,10 @@
-/* src\index.css */
+/* src/App.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Remove width and height constraints from :root */
 :root {
-  width: 100vw;
-  height: 100vh;
-  margin:0;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -29,8 +30,9 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* Remove flex and place-items to prevent centering all content */
+  /* display: flex;
+  place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }

@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+// src/components/SearchBar.jsx
+import { useState, useEffect, useCallback } from 'react';
 import { TextField, IconButton, InputAdornment, Box } from '@mui/material';
 import { Search, Place } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { fetchWeather } from '../features/weatherSlice';
 import { motion } from 'framer-motion';
+import debounce from 'lodash.debounce'; 
 
 const placeholderVariants = [
   "Rondebosch",
@@ -32,13 +34,11 @@ const placeholderVariants = [
   "Mowbray",
   "Bergvliet",
   "Woodstock",
-  "Observatory",
   "Goodwood",
   "Kloof Nek",
   "Belhar",
   "Fordsburg"
 ];
-
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
@@ -56,12 +56,24 @@ export default function SearchBar() {
     return () => clearInterval(interval);
   }, []);
 
+  // Debounced search function to prevent excessive dispatches
+  const debouncedSearch = useCallback(
+    debounce((searchQuery) => {
+      if (searchQuery.trim()) {
+        const formattedQuery = `${searchQuery.trim()}, Cape Town`;
+        dispatch(fetchWeather(formattedQuery));
+        setQuery('');
+      }
+    }, 500), // Adjust delay as needed
+    [dispatch]
+  );
+
   const handleSearch = () => {
-    if (query.trim()) {
-      const formattedQuery = `${query.trim()}, Cape Town`;
-      dispatch(fetchWeather(formattedQuery));
-      setQuery('');
-    }
+    debouncedSearch(query);
+  };
+
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
   };
 
   return (
@@ -70,58 +82,43 @@ export default function SearchBar() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder={`Search e.g. ${placeholder}...`}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Place sx={{ color: 'primary.main', mr: 1 }} />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton 
-                onClick={handleSearch}
-                sx={{
-                  background: 'linear-gradient(45deg, #00e5ff 30%, #00b8d4 90%)',
-                  color: 'white',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                    transition: 'transform 0.2s'
-                  }
-                }}
-              >
-                <Search />
-              </IconButton>
-            </InputAdornment>
-          ),
-          sx: {
-            borderRadius: '50px',
-            bgcolor: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(10px)',
-            fontSize: '1.1rem',
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.15)'
-            },
-            '&.Mui-focused': {
-              bgcolor: 'rgba(255, 255, 255, 0.2)',
-              boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)'
-            }
-          }
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            paddingLeft: '16px',
-            paddingRight: '8px'
-          }
-        }}
-      />
+      <Box
+        className="w-full sm:w-4/5 md:w-3/5 lg:w-3/4 xl:w-4/5 mx-auto px-4 mb-4"
+      >
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder={`Search e.g. ${placeholder}...`}
+          value={query}
+          onChange={handleInputChange}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Place className="text-primary-500 mr-2" aria-label="Location Icon" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton 
+                  onClick={handleSearch}
+                  aria-label="search"
+                  className="bg-gradient-to-r from-blue-400 to-teal-400 text-white hover:scale-105 transition-transform duration-200"
+                >
+                  <Search />
+                </IconButton>
+              </InputAdornment>
+            ),
+            className: `
+              rounded-full bg-white bg-opacity-10 backdrop-blur-lg text-lg
+              hover:bg-white bg-opacity-15
+              focus:bg-white bg-opacity-20 focus:shadow-lg
+              transition-all duration-300 ease-in-out
+            `
+          }}
+          className="!rounded-full" // Override MUI's border-radius if necessary
+        />
+      </Box>
     </motion.div>
   );
 }
