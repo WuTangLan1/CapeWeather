@@ -10,8 +10,35 @@ const placeholderVariants = [
   "Newlands",
   "Kommetjie",
   "Oranjezicht",
-  "Sea Point"
+  "Sea Point",
+  "Claremont",
+  "Constantia",
+  "Camps Bay",
+  "Green Point",
+  "Milnerton",
+  "Muizenberg",
+  "Durbanville",
+  "Simon's Town",
+  "Bellville",
+  "Parklands",
+  "Salt River",
+  "Atlantis",
+  "Brackenfell",
+  "Gardens",
+  "Observatory",
+  "Vredehoek",
+  "Tamboerskloof",
+  "Kenilworth",
+  "Mowbray",
+  "Bergvliet",
+  "Woodstock",
+  "Observatory",
+  "Goodwood",
+  "Kloof Nek",
+  "Belhar",
+  "Fordsburg"
 ];
+
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
