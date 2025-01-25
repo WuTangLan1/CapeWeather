@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import SearchBar from '../components/SearchBar';
 import WeatherCard from '../components/WeatherCard';
 import WeatherMap from '../components/WeatherMap';
-import { fetchWeather } from '../features/weatherSlice'; // Ensure to import dispatch
+import { fetchWeather } from '../features/weatherSlice';
 
 const defaultCities = [
   'Rondebosch',
@@ -17,6 +17,28 @@ const defaultCities = [
   'Claremont',
   'Constantia',
   'Camps Bay',
+  'Green Point',
+  'Milnerton',
+  'Muizenberg',
+  'Durbanville',
+  "Simon's Town",
+  'Bellville',
+  'Parklands',
+  'Salt River',
+  'Atlantis',
+  'Brackenfell',
+  'Gardens',
+  'Observatory',
+  'Vredehoek',
+  'Tamboerskloof',
+  'Kenilworth',
+  'Mowbray',
+  'Bergvliet',
+  'Woodstock',
+  'Goodwood',
+  'Kloof Nek',
+  'Belhar',
+  'Fordsburg'
 ];
 
 export default function Home() {
@@ -24,40 +46,41 @@ export default function Home() {
   const { locations, loading, error } = useSelector((state) => state.weather);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box mb={4}>
+    <Container maxWidth={false} className="w-full py-8 px-4 sm:px-6 lg:px-8">
+      {/* Search Bar */}
+      <Box className="mb-8">
         <SearchBar />
       </Box>
 
+      {/* Error Message */}
       {error && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Box
-            sx={{
-              bgcolor: 'error.main',
-              color: 'white',
-              p: 2,
-              borderRadius: 2,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-            }}
-          >
-            <Typography variant="body1">⚠️ {error}</Typography>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="mb-6"
+        >
+          <Box className="bg-red-600 text-white p-4 rounded-lg shadow-lg flex items-center space-x-2">
+            <span className="text-xl">⚠️</span>
+            <Typography variant="body1">{error}</Typography>
           </Box>
         </motion.div>
       )}
 
-      <Grid container spacing={4}>
+      {/* Main Content Grid */}
+      <Grid container spacing={6}>
+        {/* Weather Map */}
         <Grid item xs={12} lg={8}>
           {loading ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <Skeleton
                 variant="rounded"
                 height={500}
-                sx={{
-                  bgcolor: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: '16px',
-                }}
+                className="bg-gray-700 rounded-2xl"
               />
             </motion.div>
           ) : (
@@ -65,51 +88,55 @@ export default function Home() {
           )}
         </Grid>
 
+        {/* Weather Information or Default Cities */}
         <Grid item xs={12} lg={4}>
           {locations.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-              <Card
-                sx={{
-                  p: 3,
-                  bgcolor: 'background.paper',
-                  boxShadow: 3,
-                  borderRadius: '16px',
-                }}
-              >
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <Card className="bg-white bg-opacity-10 backdrop-blur-lg p-6 rounded-2xl shadow-xl">
+                <Typography variant="h5" className="font-bold mb-3 text-white">
                   🌆 Explore Cape Town
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography variant="body1" className="text-gray-300 mb-6">
                   Search for Cape Town suburbs or try these popular areas:
                 </Typography>
 
-                <Stack spacing={2}>
+                {/* Suburbs Grid */}
+                <Box className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {defaultCities.map((city) => (
                     <Button
                       key={city}
                       variant="outlined"
-                      fullWidth
-                      onClick={() => dispatch(fetchWeather(`${city}, Cape Town`))} // Added onClick
-                      sx={{
-                        justifyContent: 'flex-start',
-                        py: 1.5,
-                        borderColor: 'rgba(255, 255, 255, 0.2)',
-                        '&:hover': {
-                          borderColor: 'primary.main',
-                          bgcolor: 'rgba(0, 229, 255, 0.05)',
-                        },
-                      }}
+                      onClick={() => dispatch(fetchWeather(`${city}, Cape Town`))}
+                      className="
+                        justify-start
+                        py-3
+                        border border-white border-opacity-20
+                        text-white
+                        hover:border-primary-500
+                        hover:bg-primary-500 hover:bg-opacity-20
+                        transition-colors duration-200
+                        rounded-lg
+                        w-full
+                      "
                     >
-                      <Place sx={{ color: 'primary.main', mr: 1.5 }} />
+                      <Place className="text-primary-500 mr-3" />
                       {city}
                     </Button>
                   ))}
-                </Stack>
+                </Box>
               </Card>
             </motion.div>
           ) : (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Stack spacing={3}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Stack spacing={6}>
                 {locations.map((location, index) => (
                   <WeatherCard key={index} data={location} />
                 ))}
