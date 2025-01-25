@@ -77,48 +77,67 @@ export default function SearchBar() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: '600px', // Limits the maximum width to 600px
+        marginX: 'auto',  // Centers the component horizontally
+        paddingX: '16px', // Adds padding on the left and right
+        paddingY: '16px', // Adds padding on the top and bottom
+      }}
     >
-      <Box
-        className="w-full sm:w-4/5 md:w-3/5 lg:w-3/4 xl:w-4/5 mx-auto px-4 mb-4"
-      >
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder={`Search e.g. ${placeholder}...`}
-          value={query}
-          onChange={handleInputChange}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Place className="text-primary-500 mr-2" aria-label="Location Icon" />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton 
-                  onClick={handleSearch}
-                  aria-label="search"
-                  className="bg-gradient-to-r from-blue-400 to-teal-400 text-white hover:scale-105 transition-transform duration-200"
-                >
-                  <Search />
-                </IconButton>
-              </InputAdornment>
-            ),
-            className: `
-              rounded-full bg-white bg-opacity-10 backdrop-blur-lg text-lg
-              hover:bg-white bg-opacity-15
-              focus:bg-white bg-opacity-20 focus:shadow-lg
-              transition-all duration-300 ease-in-out
-            `
-          }}
-          className="!rounded-full" // Override MUI's border-radius if necessary
-        />
-      </Box>
-    </motion.div>
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder={`Search e.g. ${placeholder}...`}
+        value={query}
+        onChange={handleInputChange}
+        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Place sx={{ color: '#00e5ff', marginRight: '8px' }} aria-label="Location Icon" />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={handleSearch}
+                aria-label="search"
+                sx={{
+                  background: 'linear-gradient(to right, #00e5ff, #00b3c5)',
+                  color: '#fff',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    transition: 'transform 0.2s ease',
+                  },
+                }}
+              >
+                <Search />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          borderRadius: '50px',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+          },
+          '& .MuiOutlinedInput-root.Mui-focused': {
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)',
+          },
+        }}
+      />
+    </Box>
+  </motion.div>
+
   );
 }

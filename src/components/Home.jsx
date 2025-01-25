@@ -34,7 +34,13 @@ export default function Home() {
   const { locations, loading, error } = useSelector((state) => state.weather);
 
   return (
-    <Box className="min-h-screen bg-gray-900 text-white px-8 sm:px-16 py-12">
+    <Box
+          className="min-h-screen bg-gray-900 text-white px-4 sm:px-8 md:px-12 lg:px-16 py-12"
+          sx={{
+            maxWidth: '1200px', 
+            marginX: 'auto', 
+          }}
+        >
       {/* Search Bar */}
       <Box className="max-w-5xl mx-auto mb-12">
         <SearchBar />
@@ -96,22 +102,22 @@ export default function Home() {
                 >
                   Search for Cape Town suburbs or try these popular areas:
                 </Typography>
-                <Box className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <Box className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 ">
                   {allDefaultCities.map((city) => (
                     <Button
                       key={city}
                       variant="outlined"
                       onClick={() => dispatch(fetchWeather(`${city}, Cape Town`))}
                       className="
+                        flex
+                        items-center
                         justify-start
-                        py-3
                         border border-white border-opacity-30
                         text-white
                         hover:border-primary-500
                         hover:bg-primary-500 hover:bg-opacity-20
                         transition duration-200
                         rounded-lg
-                        w-full
                       "
                     >
                       <Place className="text-primary-500 mr-3" />
@@ -119,6 +125,7 @@ export default function Home() {
                     </Button>
                   ))}
                 </Box>
+
               </Box>
             </motion.div>
           ) : (
