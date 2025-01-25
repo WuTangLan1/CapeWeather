@@ -8,13 +8,20 @@ import { useMap } from 'react-leaflet';
 
 function MapBounds() {
   const map = useMap();
+
   const bounds = L.latLngBounds(
     L.latLng(-34.5, 18.2),  // SW point
     L.latLng(-33.8, 18.8)   // NE point
   );
+
   map.setMaxBounds(bounds);
+  map.setMaxBoundsViscosity(1.0); // Disallow map panning outside bounding box
+  map.setMinZoom(10);             // Zoom out just enough to see entire Cape Town area
+  map.setMaxZoom(18);             // A typical max to see details
+
   return null;
 }
+
 
 if (typeof window !== 'undefined') {
   delete L.Icon.Default.prototype._getIconUrl;
@@ -40,9 +47,10 @@ export default function WeatherMap({ locations }) {
       >
         <MapBounds />
         <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
+          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        />
+
         
         {locations.map((loc, index) => {
           // Add validation for coordinates
