@@ -1,3 +1,5 @@
+// src\main.jsx
+
 import './index.css'
 import App from './App.jsx'
 import { StrictMode } from 'react'
