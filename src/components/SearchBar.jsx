@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { TextField, IconButton, InputAdornment, Box } from '@mui/material';
 import { Search, Place } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { fetchWeather } from '../features/weatherSlice';
+import { fetchWeather } from '../features/weather/weatherSlice';
 import { motion } from 'framer-motion';
 import debounce from 'lodash.debounce'; 
 

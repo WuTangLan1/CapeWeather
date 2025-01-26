@@ -1,4 +1,4 @@
-// src/utils/weatherIcons.js
+// src/utils/weatherIcons.jsx
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSun,

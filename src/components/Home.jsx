@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import SearchBar from '../components/SearchBar';
 import WeatherMap from '../components/WeatherMap';
 import WeatherCard from '../components/WeatherCard';
-import { fetchWeather } from '../features/weatherSlice';
+import { fetchWeather } from '../features/weather/weatherSlice';
 
 const allDefaultCities = [
   'Rondebosch',

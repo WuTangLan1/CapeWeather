@@ -13,10 +13,10 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchWeatherByCoords } from '../features/weather/weatherSlice'; // Ensure correct path
+import { fetchWeatherByCoords } from '../features/weather/weatherSlice.js';
 import weatherIcons from '../utils/weatherIcons.jsx';
 import createClusterIcon from '../utils/clusterIcons';
-import MapLegend from './MapLegend';
+import MapLegend from './MapLengend.jsx'
 import HeatmapFilter from './HeatmapFilter';
 import MapSettings from './MapSettings';
 import MiniChart from './MiniChart';

@@ -91,7 +91,8 @@ const weatherSlice = createSlice({
   }
 });
 
+// **Export Reducer**
 export default weatherSlice.reducer;
 
-// **Export Thunks (Optional but Recommended)**
-export { fetchWeather, fetchBulkWeather };
+// **Export Thunks (Including fetchWeatherByCoords)**
+export { fetchWeather, fetchBulkWeather, fetchWeatherByCoords };
