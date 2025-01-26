@@ -1,7 +1,8 @@
 // src/components/MapLegend.jsx
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import weatherIcons from '../utils/weatherIcons';
+import weatherIcons from '../utils/weatherIcons.jsx';
+
 
 const legendItems = [
   { label: 'Sunny', icon: weatherIcons.sunny },
