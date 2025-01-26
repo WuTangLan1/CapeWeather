@@ -102,26 +102,52 @@ export default function Home() {
                 >
                   Search for Cape Town suburbs or try these popular areas:
                 </Typography>
-                <Box className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 ">
+                <Box 
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: {
+                      xs: 'repeat(2, 1fr)',
+                      sm: 'repeat(3, 1fr)',
+                      md: 'repeat(4, 1fr)',
+                      lg: 'repeat(6, 1fr)'
+                    }
+                  }}
+                >
                   {allDefaultCities.map((city) => (
                     <Button
                       key={city}
                       variant="outlined"
                       onClick={() => dispatch(fetchWeather(`${city}, Cape Town`))}
-                      className="
-                        flex
-                        items-center
-                        justify-start
-                        border border-white border-opacity-30
-                        text-white
-                        hover:border-primary-500
-                        hover:bg-primary-500 hover:bg-opacity-20
-                        transition duration-200
-                        rounded-lg
-                      "
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                        color: 'white',
+                        py: 1,
+                        px: 2,
+                        height: 48,
+                        textTransform: 'none',
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                          backgroundColor: 'rgba(0, 229, 255, 0.05)'
+                        },
+                        '& .MuiButton-startIcon': {
+                          marginRight: 1
+                        }
+                      }}
+                      startIcon={<Place sx={{ color: 'primary.main' }} />}
                     >
-                      <Place className="text-primary-500 mr-3" />
-                      {city}
+                      <Typography variant="button" sx={{ 
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        width: '100%',
+                        textAlign: 'left'
+                      }}>
+                        {city}
+                      </Typography>
                     </Button>
                   ))}
                 </Box>

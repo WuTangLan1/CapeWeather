@@ -4,7 +4,7 @@ import { red } from '@mui/material/colors';
 
 export const theme = createTheme({
   palette: {
-    mode: 'dark', // Set to 'light' if preferred
+    mode: 'dark', 
     primary: {
       main: '#00e5ff',
       contrastText: '#0B0D21',
@@ -46,6 +46,11 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiContainer: {
+      root: {
+        spacing: 4
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
