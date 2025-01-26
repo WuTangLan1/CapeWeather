@@ -17,9 +17,9 @@ import { fetchWeatherByCoords } from '../features/weather/weatherSlice.js';
 import weatherIcons from '../utils/weatherIcons.jsx';
 import createClusterIcon from '../utils/clusterIcons';
 import MapLegend from './MapLengend.jsx'
-import HeatmapFilter from './HeatmapFilter';
-import MapSettings from './MapSettings';
-import MiniChart from './MiniChart';
+import HeatmapFilter from './HeatmapFilter.jsx';
+import MapSettings from './MapSettings.jsx';
+import MiniChart from './MiniChart.jsx';
 import { motion } from 'framer-motion';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
