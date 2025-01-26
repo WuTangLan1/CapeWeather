@@ -1,0 +1,33 @@
+/* src/styles/cluster.css */
+.custom-cluster {
+    background-color: rgba(0, 229, 255, 0.6);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: bold;
+    transition: transform 0.3s;
+  }
+  
+  .cluster-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .cluster-small {
+    font-size: 14px;
+  }
+  
+  .cluster-medium {
+    font-size: 16px;
+  }
+  
+  .cluster-large {
+    font-size: 18px;
+  }
+  
+  .custom-cluster:hover {
+    transform: scale(1.1);
+  }
+  
