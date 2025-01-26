@@ -1,28 +1,35 @@
 // src/components/WeatherMap.jsx
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useEffect } from 'react';
 
-
-import { useMap } from 'react-leaflet';
-
-function MapBounds() {
+// Create a separate component for bounds control
+function MapBoundsController() {
   const map = useMap();
 
-  const bounds = L.latLngBounds(
-    L.latLng(-34.5, 18.2),  // SW point
-    L.latLng(-33.8, 18.8)   // NE point
-  );
+  useEffect(() => {
+    if (map) {
+      const bounds = L.latLngBounds(
+        L.latLng(-34.5, 18.2),  // SW point
+        L.latLng(-33.8, 18.8)   // NE point
+      );
 
-  map.setMaxBounds(bounds);
-  map.setMaxBoundsViscosity(1.0); // Disallow map panning outside bounding box
-  map.setMinZoom(10);             // Zoom out just enough to see entire Cape Town area
-  map.setMaxZoom(18);             // A typical max to see details
+      // Check if method exists before calling
+      if (typeof map.setMaxBoundsViscosity === 'function') {
+        map.setMaxBoundsViscosity(1.0);
+      }
+      
+      map.setMaxBounds(bounds);
+      map.setMinZoom(10);
+      map.setMaxZoom(18);
+    }
+  }, [map]);
 
   return null;
 }
 
-
+// Marker icon configuration
 if (typeof window !== 'undefined') {
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -33,32 +40,31 @@ if (typeof window !== 'undefined') {
 }
 
 export default function WeatherMap({ locations }) {
-  // Add null check for locations
   if (!locations || locations.length === 0) return null;
 
   return (
     <div style={{ height: '500px', borderRadius: '16px', overflow: 'hidden' }}>
       <MapContainer 
         center={[-33.9249, 18.4241]}
-        zoom={11}  // Closer zoom level
+        zoom={11}
         style={{ height: '100%', width: '100%' }}
-        // Add key to force re-render when locations change
-        key={locations.length}
+        whenCreated={(map) => {
+          // Initialize bounds after map creation
+          setTimeout(() => {
+            map.invalidateSize();
+          }, 0);
+        }}
       >
-        <MapBounds />
+        <MapBoundsController />
         <TileLayer
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
 
-        
-        {locations.map((loc, index) => {
-          // Add validation for coordinates
-          if (!loc.location?.lat || !loc.location?.lon) return null;
-          
-          return (
+        {locations.map((loc) => (
+          loc.location?.lat && loc.location?.lon && (
             <Marker
-              key={`${loc.location.name}-${index}`} // Better key strategy
+              key={`${loc.location.name}-${loc.location.lat}`}
               position={[loc.location.lat, loc.location.lon]}
             >
               <Popup>
@@ -80,8 +86,8 @@ export default function WeatherMap({ locations }) {
                 </div>
               </Popup>
             </Marker>
-          );
-        })}
+          )
+        ))}
       </MapContainer>
     </div>
   );
