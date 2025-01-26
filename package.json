@@ -26,6 +26,8 @@
     "capeweather": "file:",
     "framer-motion": "^10.18.0",
     "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^3.1.0",
+    "leaflet.heat": "github:Leaflet/Leaflet.heat",
     "leaflet.markercluster": "^1.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

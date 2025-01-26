@@ -2,8 +2,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchCurrentWeather, fetchMultipleLocations } from '../../services/weatherAPI';
 
-// Existing Thunks
-export const fetchWeather = createAsyncThunk(
+// Define Thunks without exporting them inline
+const fetchWeather = createAsyncThunk(
   'weather/fetch',
   async (location, { rejectWithValue }) => {
     try {
@@ -14,7 +14,7 @@ export const fetchWeather = createAsyncThunk(
   }
 );
 
-export const fetchBulkWeather = createAsyncThunk(
+const fetchBulkWeather = createAsyncThunk(
   'weather/fetchBulk',
   async (locations, { rejectWithValue }) => {
     try {
@@ -27,7 +27,7 @@ export const fetchBulkWeather = createAsyncThunk(
 );
 
 // **New Thunk: fetchWeatherByCoords**
-export const fetchWeatherByCoords = createAsyncThunk(
+const fetchWeatherByCoords = createAsyncThunk(
   'weather/fetchByCoords',
   async ({ lat, lon }, { rejectWithValue }) => {
     try {
@@ -50,7 +50,7 @@ const weatherSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // **Handle fetchWeather**
+      // Handle fetchWeather
       .addCase(fetchWeather.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -67,12 +67,12 @@ const weatherSlice = createSlice({
         state.error = action.payload;
       })
       
-      // **Handle fetchBulkWeather**
+      // Handle fetchBulkWeather
       .addCase(fetchBulkWeather.fulfilled, (state, action) => {
         state.locations = action.payload;
       })
       
-      // **Handle fetchWeatherByCoords**
+      // Handle fetchWeatherByCoords
       .addCase(fetchWeatherByCoords.pending, (state) => {
         state.loading = true;
         state.error = null;

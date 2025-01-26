@@ -7,40 +7,51 @@ import {
   Popup,
   useMap,
 } from 'react-leaflet';
+
+// 1) Import Leaflet
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+// Make Leaflet global so older plugins see `L`
+window.L = L;
+
+// 2) Side-effect imports for older plugins:
+import 'leaflet.heat'; // modifies window.L
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster'; // modifies window.L
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
+import 'leaflet-control-geocoder'; // modifies window.L.Control.Geocoder
+
+// 3) Now you can do:
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchWeatherByCoords } from '../features/weather/weatherSlice.js';
 import weatherIcons from '../utils/weatherIcons.jsx';
-import createClusterIcon from '../utils/clusterIcons';
-import MapLegend from './MapLengend.jsx'
-import HeatmapFilter from './HeatmapFilter.jsx';
+import createClusterIcon from '../utils/clusterIcons.js';
+import MapLegend from './MapLegend.jsx';
+import HeatMapFilter from './HeatMapFilter.jsx';
 import MapSettings from './MapSettings.jsx';
 import MiniChart from './MiniChart.jsx';
 import { motion } from 'framer-motion';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import 'leaflet.heat';
-import 'leaflet.markercluster';
 
+////////////////////////////////////////////////////////////////
 // Geocoder Control Component
+////////////////////////////////////////////////////////////////
 const GeocoderControl = ({ dispatch }) => {
   const map = useMap();
 
   useEffect(() => {
-    const LControlGeocoder = require('leaflet-control-geocoder');
+    // Now that plugin is loaded, it's on L.Control.Geocoder
+    // instead of some default import
+    const geocoder = L.Control.Geocoder.nominatim();
 
-    const geocoder = LControlGeocoder.geocoder.nominatim();
-
-    const control = LControlGeocoder.control({
-      geocoder: geocoder,
+    const control = L.Control.Geocoder.control({
+      geocoder,
       defaultMarkGeocode: false,
       showResultIcons: false,
     })
-      .on('markgeocode', function (e) {
+      .on('markgeocode', (e) => {
         const bbox = e.geocode.bbox;
         const poly = L.polygon([
           bbox.getSouthEast(),
@@ -63,13 +74,16 @@ const GeocoderControl = ({ dispatch }) => {
   return null;
 };
 
+////////////////////////////////////////////////////////////////
 // Heatmap Layer Component
+////////////////////////////////////////////////////////////////
 const HeatmapLayer = ({ points }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!points || points.length === 0) return;
+    if (!points || !points.length) return;
 
+    // L.heatLayer is now on window.L from the plugin import
     const heatLayer = L.heatLayer(points, {
       radius: 25,
       blur: 15,
@@ -85,7 +99,9 @@ const HeatmapLayer = ({ points }) => {
   return null;
 };
 
-// Custom MarkerClusterGroup Component
+////////////////////////////////////////////////////////////////
+// Marker Cluster Group
+////////////////////////////////////////////////////////////////
 const MarkerClusterGroupComponent = ({ children }) => {
   const map = useMap();
 
@@ -115,21 +131,21 @@ const MarkerClusterGroupComponent = ({ children }) => {
   return null;
 };
 
+////////////////////////////////////////////////////////////////
 // Main WeatherMap Component
+////////////////////////////////////////////////////////////////
 const WeatherMap = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === 'dark';
 
-  const { locations, loading, error } = useSelector(
-    (state) => state.weather
-  );
+  const { locations, loading, error } = useSelector((state) => state.weather);
 
   const [temperatureRange, setTemperatureRange] = useState([-10, 40]);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showLegend, setShowLegend] = useState(true);
 
-  // Filter locations based on temperature range
+  // Filter
   const filteredLocations = useMemo(() => {
     return locations.filter(
       (loc) =>
@@ -138,14 +154,14 @@ const WeatherMap = () => {
     );
   }, [locations, temperatureRange]);
 
-  // Prepare heatmap data
+  // Heat data
   const heatData = useMemo(() => {
     return filteredLocations
       .filter((loc) => loc.location?.lat && loc.location?.lon)
       .map((loc) => [loc.location.lat, loc.location.lon, loc.current.temp_c]);
   }, [filteredLocations]);
 
-  // Initialize custom marker icons if needed
+  // Fix default Leaflet marker icons
   useEffect(() => {
     if (typeof window !== 'undefined') {
       delete L.Icon.Default.prototype._getIconUrl;
@@ -178,12 +194,12 @@ const WeatherMap = () => {
       />
 
       {/* Temperature Filter */}
-      <HeatmapFilter
+      <HeatMapFilter
         temperatureRange={temperatureRange}
         setTemperatureRange={setTemperatureRange}
       />
 
-      {/* Animated Map Container */}
+      {/* Animated Map */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -191,7 +207,7 @@ const WeatherMap = () => {
         style={{ height: '100%', width: '100%' }}
       >
         <MapContainer
-          center={[-33.9249, 18.4241]} // Cape Town Coordinates
+          center={[-33.9249, 18.4241]}
           zoom={11}
           style={{ height: '100%', width: '100%' }}
           whenCreated={(mapInstance) => {
@@ -203,7 +219,7 @@ const WeatherMap = () => {
           {/* Geocoder Control */}
           <GeocoderControl dispatch={dispatch} />
 
-          {/* Tile Layer based on Theme */}
+          {/* Tile Layer */}
           <TileLayer
             url={
               isDarkMode
@@ -239,9 +255,7 @@ const WeatherMap = () => {
                           width: '200px',
                         }}
                       >
-                        <Typography variant="h6">
-                          {loc.location.name}
-                        </Typography>
+                        <Typography variant="h6">{loc.location.name}</Typography>
                         <Box sx={{ my: 1 }}>
                           {weatherIcons[
                             loc.current.condition.text.toLowerCase()

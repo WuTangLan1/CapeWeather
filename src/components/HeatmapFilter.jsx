@@ -1,8 +1,8 @@
-// src/components/HeatmapFilter.jsx
+// src/components/HeatMapFilter.jsx
 import React from 'react';
 import { Box, Slider, Typography } from '@mui/material';
 
-const HeatmapFilter = ({ temperatureRange, setTemperatureRange }) => {
+const HeatMapFilter = ({ temperatureRange, setTemperatureRange }) => {
   const handleChange = (event, newValue) => {
     setTemperatureRange(newValue);
   };
@@ -33,4 +33,4 @@ const HeatmapFilter = ({ temperatureRange, setTemperatureRange }) => {
   );
 };
 
-export default HeatmapFilter;
+export default HeatMapFilter;
