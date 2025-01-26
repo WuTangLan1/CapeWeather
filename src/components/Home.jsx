@@ -1,5 +1,4 @@
-// src\components\Home.jsx
-
+// src/components/Home.jsx
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Typography, Button, Skeleton } from '@mui/material';
 import { Place } from '@mui/icons-material';
@@ -77,7 +76,7 @@ export default function Home() {
               />
             </motion.div>
           ) : (
-            <WeatherMap locations={locations} />
+            <WeatherMap />
           )}
         </Box>
 

@@ -2,8 +2,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchCurrentWeather, fetchMultipleLocations } from '../../services/weatherAPI';
 
-// Define Thunks without exporting them inline
-const fetchWeather = createAsyncThunk(
+// Thunks
+export const fetchWeather = createAsyncThunk(
   'weather/fetch',
   async (location, { rejectWithValue }) => {
     try {
@@ -14,7 +14,7 @@ const fetchWeather = createAsyncThunk(
   }
 );
 
-const fetchBulkWeather = createAsyncThunk(
+export const fetchBulkWeather = createAsyncThunk(
   'weather/fetchBulk',
   async (locations, { rejectWithValue }) => {
     try {
@@ -26,8 +26,7 @@ const fetchBulkWeather = createAsyncThunk(
   }
 );
 
-// **New Thunk: fetchWeatherByCoords**
-const fetchWeatherByCoords = createAsyncThunk(
+export const fetchWeatherByCoords = createAsyncThunk(
   'weather/fetchByCoords',
   async ({ lat, lon }, { rejectWithValue }) => {
     try {
@@ -39,6 +38,14 @@ const fetchWeatherByCoords = createAsyncThunk(
   }
 );
 
+// Helper function to check for existing location
+const isLocationExists = (locations, newLocation) => {
+  return locations.some(
+    loc => loc.location.name.toLowerCase() === newLocation.location.name.toLowerCase()
+  );
+};
+
+// Slice
 const weatherSlice = createSlice({
   name: 'weather',
   initialState: {
@@ -47,7 +54,21 @@ const weatherSlice = createSlice({
     loading: false,
     error: null
   },
-  reducers: {},
+  reducers: {
+    // Optional: Add a reducer to remove locations
+    removeLocation: (state, action) => {
+      state.locations = state.locations.filter(
+        loc => loc.location.name.toLowerCase() !== action.payload.toLowerCase()
+      );
+    },
+    // Optional: Add a reducer to clear all locations
+    clearLocations: (state) => {
+      state.locations = [];
+      state.current = null;
+      state.error = null;
+      state.loading = false;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Handle fetchWeather
@@ -57,7 +78,9 @@ const weatherSlice = createSlice({
       })
       .addCase(fetchWeather.fulfilled, (state, action) => {
         if (action.payload.location.region.toLowerCase().includes('western cape')) {
-          state.locations = [...state.locations, action.payload];
+          if (!isLocationExists(state.locations, action.payload)) {
+            state.locations = [...state.locations, action.payload];
+          }
         }
         state.loading = false;
         state.current = action.payload;
@@ -69,7 +92,11 @@ const weatherSlice = createSlice({
       
       // Handle fetchBulkWeather
       .addCase(fetchBulkWeather.fulfilled, (state, action) => {
-        state.locations = action.payload;
+        // Optionally, replace all locations or append uniquely
+        const uniqueLocations = action.payload.filter(
+          newLoc => !isLocationExists(state.locations, newLoc)
+        );
+        state.locations = [...state.locations, ...uniqueLocations];
       })
       
       // Handle fetchWeatherByCoords
@@ -79,7 +106,9 @@ const weatherSlice = createSlice({
       })
       .addCase(fetchWeatherByCoords.fulfilled, (state, action) => {
         if (action.payload.location.region.toLowerCase().includes('western cape')) {
-          state.locations = [...state.locations, action.payload];
+          if (!isLocationExists(state.locations, action.payload)) {
+            state.locations = [...state.locations, action.payload];
+          }
         }
         state.loading = false;
         state.current = action.payload;
@@ -91,8 +120,6 @@ const weatherSlice = createSlice({
   }
 });
 
-// **Export Reducer**
+// Export Reducer and Actions
 export default weatherSlice.reducer;
-
-// **Export Thunks (Including fetchWeatherByCoords)**
-export { fetchWeather, fetchBulkWeather, fetchWeatherByCoords };
+export const { removeLocation, clearLocations } = weatherSlice.actions;

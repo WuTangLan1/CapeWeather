@@ -77,67 +77,66 @@ export default function SearchBar() {
   };
 
   return (
-  <motion.div
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: '600px', // Limits the maximum width to 600px
-        marginX: 'auto',  // Centers the component horizontally
-        paddingX: '16px', // Adds padding on the left and right
-        paddingY: '16px', // Adds padding on the top and bottom
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder={`Search e.g. ${placeholder}...`}
-        value={query}
-        onChange={handleInputChange}
-        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Place sx={{ color: '#00e5ff', marginRight: '8px' }} aria-label="Location Icon" />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={handleSearch}
-                aria-label="search"
-                sx={{
-                  background: 'linear-gradient(to right, #00e5ff, #00b3c5)',
-                  color: '#fff',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                    transition: 'transform 0.2s ease',
-                  },
-                }}
-              >
-                <Search />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
+      <Box
         sx={{
-          borderRadius: '50px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.15)',
-          },
-          '& .MuiOutlinedInput-root.Mui-focused': {
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)',
-          },
+          width: '100%',
+          maxWidth: '600px', // Limits the maximum width to 600px
+          marginX: 'auto',  // Centers the component horizontally
+          paddingX: '16px', // Adds padding on the left and right
+          paddingY: '16px', // Adds padding on the top and bottom
         }}
-      />
-    </Box>
-  </motion.div>
-
+      >
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder={`Search e.g. ${placeholder}...`}
+          value={query}
+          onChange={handleInputChange}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Place sx={{ color: '#00e5ff', marginRight: '8px' }} aria-label="Location Icon" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleSearch}
+                  aria-label="search"
+                  sx={{
+                    background: 'linear-gradient(to right, #00e5ff, #00b3c5)',
+                    color: '#fff',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      transition: 'transform 0.2s ease',
+                    },
+                  }}
+                >
+                  <Search />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            borderRadius: '50px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            },
+            '& .MuiOutlinedInput-root.Mui-focused': {
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)',
+            },
+          }}
+        />
+      </Box>
+    </motion.div>
   );
 }

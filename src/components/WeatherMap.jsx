@@ -1,4 +1,5 @@
 // src/components/WeatherMap.jsx
+
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   MapContainer,
@@ -15,14 +16,14 @@ import 'leaflet/dist/leaflet.css';
 window.L = L;
 
 // 2) Side-effect imports for older plugins:
-import 'leaflet.heat'; // modifies window.L
+import 'leaflet.heat'; // modifies window.L with L.heatLayer
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import 'leaflet.markercluster'; // modifies window.L
+import 'leaflet.markercluster'; // modifies window.L with L.markerClusterGroup
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
-import 'leaflet-control-geocoder'; // modifies window.L.Control.Geocoder
+import 'leaflet-control-geocoder'; // modifies window.L with L.Control.Geocoder
 
-// 3) Now you can do:
+// 3) React/Redux code
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchWeatherByCoords } from '../features/weather/weatherSlice.js';
 import weatherIcons from '../utils/weatherIcons.jsx';
@@ -35,18 +36,26 @@ import { motion } from 'framer-motion';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-////////////////////////////////////////////////////////////////
-// Geocoder Control Component
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+// Geocoder Control
+////////////////////////////////////////////////////////////////////////
 const GeocoderControl = ({ dispatch }) => {
   const map = useMap();
 
   useEffect(() => {
-    // Now that plugin is loaded, it's on L.Control.Geocoder
-    // instead of some default import
+    // 4) The plugin defines L.Control.Geocoder.nominatim() and L.Control.geocoder(...)
+    if (!L.Control.Geocoder) {
+      console.error('leaflet-control-geocoder plugin did not load properly!');
+      return;
+    }
+
+    // Example usage from plugin docs:
+    //   var geocoder = L.Control.Geocoder.nominatim();
+    //   L.Control.geocoder({ geocoder }).addTo(map);
+    // We'll do the same, plus handle "markgeocode"
     const geocoder = L.Control.Geocoder.nominatim();
 
-    const control = L.Control.Geocoder.control({
+    const geocoderControl = L.Control.geocoder({
       geocoder,
       defaultMarkGeocode: false,
       showResultIcons: false,
@@ -67,23 +76,22 @@ const GeocoderControl = ({ dispatch }) => {
       .addTo(map);
 
     return () => {
-      map.removeControl(control);
+      map.removeControl(geocoderControl);
     };
   }, [map, dispatch]);
 
   return null;
 };
 
-////////////////////////////////////////////////////////////////
-// Heatmap Layer Component
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+// Heatmap Layer
+////////////////////////////////////////////////////////////////////////
 const HeatmapLayer = ({ points }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!points || !points.length) return;
+    if (!points || points.length === 0) return;
 
-    // L.heatLayer is now on window.L from the plugin import
     const heatLayer = L.heatLayer(points, {
       radius: 25,
       blur: 15,
@@ -99,9 +107,9 @@ const HeatmapLayer = ({ points }) => {
   return null;
 };
 
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 // Marker Cluster Group
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 const MarkerClusterGroupComponent = ({ children }) => {
   const map = useMap();
 
@@ -131,9 +139,9 @@ const MarkerClusterGroupComponent = ({ children }) => {
   return null;
 };
 
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 // Main WeatherMap Component
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 const WeatherMap = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -145,7 +153,7 @@ const WeatherMap = () => {
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showLegend, setShowLegend] = useState(true);
 
-  // Filter
+  // Filter the locations
   const filteredLocations = useMemo(() => {
     return locations.filter(
       (loc) =>
@@ -154,7 +162,7 @@ const WeatherMap = () => {
     );
   }, [locations, temperatureRange]);
 
-  // Heat data
+  // Prepare heat data
   const heatData = useMemo(() => {
     return filteredLocations
       .filter((loc) => loc.location?.lat && loc.location?.lon)
@@ -199,7 +207,7 @@ const WeatherMap = () => {
         setTemperatureRange={setTemperatureRange}
       />
 
-      {/* Animated Map */}
+      {/* Animated Map Container */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -255,7 +263,9 @@ const WeatherMap = () => {
                           width: '200px',
                         }}
                       >
-                        <Typography variant="h6">{loc.location.name}</Typography>
+                        <Typography variant="h6">
+                          {loc.location.name}
+                        </Typography>
                         <Box sx={{ my: 1 }}>
                           {weatherIcons[
                             loc.current.condition.text.toLowerCase()
