@@ -36,9 +36,7 @@ import { motion } from 'framer-motion';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-////////////////////////////////////////////////////////////////////////
-// Geocoder Control
-////////////////////////////////////////////////////////////////////////
+
 const GeocoderControl = ({ dispatch }) => {
   const map = useMap();
 
@@ -49,10 +47,6 @@ const GeocoderControl = ({ dispatch }) => {
       return;
     }
 
-    // Example usage from plugin docs:
-    //   var geocoder = L.Control.Geocoder.nominatim();
-    //   L.Control.geocoder({ geocoder }).addTo(map);
-    // We'll do the same, plus handle "markgeocode"
     const geocoder = L.Control.Geocoder.nominatim();
 
     const geocoderControl = L.Control.geocoder({
@@ -83,9 +77,7 @@ const GeocoderControl = ({ dispatch }) => {
   return null;
 };
 
-////////////////////////////////////////////////////////////////////////
-// Heatmap Layer
-////////////////////////////////////////////////////////////////////////
+
 const HeatmapLayer = ({ points }) => {
   const map = useMap();
 
@@ -107,9 +99,7 @@ const HeatmapLayer = ({ points }) => {
   return null;
 };
 
-////////////////////////////////////////////////////////////////////////
-// Marker Cluster Group
-////////////////////////////////////////////////////////////////////////
+
 const MarkerClusterGroupComponent = ({ children }) => {
   const map = useMap();
 
@@ -139,9 +129,7 @@ const MarkerClusterGroupComponent = ({ children }) => {
   return null;
 };
 
-////////////////////////////////////////////////////////////////////////
-// Main WeatherMap Component
-////////////////////////////////////////////////////////////////////////
+
 const WeatherMap = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -169,7 +157,6 @@ const WeatherMap = () => {
       .map((loc) => [loc.location.lat, loc.location.lon, loc.current.temp_c]);
   }, [filteredLocations]);
 
-  // Fix default Leaflet marker icons
   useEffect(() => {
     if (typeof window !== 'undefined') {
       delete L.Icon.Default.prototype._getIconUrl;

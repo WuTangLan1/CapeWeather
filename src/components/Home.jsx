@@ -8,25 +8,7 @@ import WeatherMap from '../components/WeatherMap';
 import WeatherCard from '../components/WeatherCard';
 import { fetchWeather } from '../features/weather/weatherSlice';
 
-const allDefaultCities = [
-  'Rondebosch',
-  'Newlands',
-  'Kommetjie',
-  'Oranjezicht',
-  'Sea Point',
-  'Claremont',
-  'Constantia',
-  'Camps Bay',
-  'Green Point',
-  'Milnerton',
-  'Muizenberg',
-  'Durbanville',
-  "Simon's Town",
-  'Bellville',
-  'Parklands',
-  'Salt River',
-  'Atlantis',
-];
+import { suburbsList } from '../utils/suburbs'
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -113,7 +95,7 @@ export default function Home() {
                     }
                   }}
                 >
-                  {allDefaultCities.map((city) => (
+{suburbsList.map((city) => (
                     <Button
                       key={city}
                       variant="outlined"
@@ -150,7 +132,6 @@ export default function Home() {
                     </Button>
                   ))}
                 </Box>
-
               </Box>
             </motion.div>
           ) : (
