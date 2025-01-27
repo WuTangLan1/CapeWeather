@@ -1,15 +1,15 @@
-// src/components/SearchBar.jsx
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Autocomplete, TextField, IconButton, InputAdornment, Box } from '@mui/material';
 import { Search, Place } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { fetchWeather } from '../features/weather/weatherSlice';
 import { motion } from 'framer-motion';
-import debounce from 'lodash.debounce'; 
+import debounce from 'lodash.debounce';
 import { suburbsList } from '../utils/suburbs';
 
 export default function SearchBar() {
   const [inputValue, setInputValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState(null);
   const dispatch = useDispatch();
 
   const debouncedSearch = useCallback(
@@ -17,21 +17,12 @@ export default function SearchBar() {
       if (searchQuery) {
         const formattedQuery = `${searchQuery.trim()}, Cape Town`;
         dispatch(fetchWeather(formattedQuery));
-        setInputValue('');
+        setInputValue(''); // Clear the input field
+        setSelectedValue(null); // Reset the selected value
       }
     }, 500),
     [dispatch]
   );
-
-  const handleSearch = (event, value) => {
-    if (value) {
-      debouncedSearch(value);
-    }
-  };
-
-  const handleInputChange = (event, newInputValue) => {
-    setInputValue(newInputValue);
-  };
 
   return (
     <motion.div
@@ -43,28 +34,34 @@ export default function SearchBar() {
         sx={{
           width: '100%',
           maxWidth: '600px',
-          marginX: 'auto',  
+          marginX: 'auto',
           paddingX: '16px',
-          paddingY: '16px', 
+          paddingY: '16px',
         }}
       >
         <Autocomplete
-          freeSolo={false} 
+          freeSolo={false}
           options={suburbsList}
-          value={inputValue}
-          onChange={handleSearch}
+          value={selectedValue}
+          onChange={(_, newValue) => {
+            setSelectedValue(newValue);
+            if (newValue) debouncedSearch(newValue);
+          }}
           inputValue={inputValue}
-          onInputChange={handleInputChange}
+          onInputChange={(_, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          isOptionEqualToValue={(option, value) => option === value}
           renderInput={(params) => (
             <TextField
               {...params}
               variant="outlined"
-              placeholder={`Search e.g. ${suburbsList[0]}...`} // Use the first suburb as a placeholder
+              placeholder={`Search e.g. ${suburbsList[0]}...`}
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Place sx={{ color: '#00e5ff', marginRight: '8px' }} aria-label="Location Icon" />
+                    <Place sx={{ color: '#00e5ff', marginRight: '8px' }} />
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -72,15 +69,12 @@ export default function SearchBar() {
                     {params.InputProps.endAdornment}
                     <InputAdornment position="end">
                       <IconButton
-                        onClick={() => debouncedSearch(inputValue)}
+                        onClick={() => selectedValue && debouncedSearch(selectedValue)}
                         aria-label="search"
                         sx={{
                           background: 'linear-gradient(to right, #00e5ff, #00b3c5)',
                           color: '#fff',
-                          '&:hover': {
-                            transform: 'scale(1.05)',
-                            transition: 'transform 0.2s ease',
-                          },
+                          '&:hover': { transform: 'scale(1.05)', transition: 'transform 0.2s ease' },
                         }}
                       >
                         <Search />
@@ -93,9 +87,7 @@ export default function SearchBar() {
                 borderRadius: '50px',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 backdropFilter: 'blur(10px)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                },
+                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.15)' },
                 '& .MuiOutlinedInput-root.Mui-focused': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
                   boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)',

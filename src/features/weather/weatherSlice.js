@@ -2,7 +2,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchCurrentWeather, fetchMultipleLocations } from '../../services/weatherAPI';
 
-// Thunks
 export const fetchWeather = createAsyncThunk(
   'weather/fetch',
   async (location, { rejectWithValue }) => {
@@ -55,13 +54,11 @@ const weatherSlice = createSlice({
     error: null
   },
   reducers: {
-    // Optional: Add a reducer to remove locations
     removeLocation: (state, action) => {
       state.locations = state.locations.filter(
         loc => loc.location.name.toLowerCase() !== action.payload.toLowerCase()
       );
     },
-    // Optional: Add a reducer to clear all locations
     clearLocations: (state) => {
       state.locations = [];
       state.current = null;
@@ -71,17 +68,22 @@ const weatherSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Handle fetchWeather
       .addCase(fetchWeather.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchWeather.fulfilled, (state, action) => {
-        if (action.payload.location.region.toLowerCase().includes('western cape')) {
-          if (!isLocationExists(state.locations, action.payload)) {
-            state.locations = [...state.locations, action.payload];
-          }
+        const existingIndex = state.locations.findIndex(
+          (loc) =>
+            loc.location.name.toLowerCase() === action.payload.location.name.toLowerCase()
+        );
+    
+        if (existingIndex > -1) {
+          state.locations[existingIndex] = action.payload;
+        } else {
+          state.locations = [...state.locations, action.payload];
         }
+    
         state.loading = false;
         state.current = action.payload;
       })
@@ -89,17 +91,13 @@ const weatherSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
-      // Handle fetchBulkWeather
       .addCase(fetchBulkWeather.fulfilled, (state, action) => {
-        // Optionally, replace all locations or append uniquely
         const uniqueLocations = action.payload.filter(
           newLoc => !isLocationExists(state.locations, newLoc)
         );
         state.locations = [...state.locations, ...uniqueLocations];
       })
       
-      // Handle fetchWeatherByCoords
       .addCase(fetchWeatherByCoords.pending, (state) => {
         state.loading = true;
         state.error = null;
